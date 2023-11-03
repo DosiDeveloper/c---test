@@ -17,14 +17,14 @@ RM = rm -f
 
 .PHONY: all all-before all-after clean clean-custom
 
-all: all-before "sistema de inventario universidad.exe" all-after
+all: all-before run all-after
 
 
 clean: clean-custom
 	${RM} $(OBJ) $(BIN)
 
-$(BIN): $(OBJ)
-	$(CPP) $(LINKOBJ) -o "sistema de inventario universidad.exe" $(LIBS)
+run: $(OBJ)
+	$(CPP) main.cpp -o "sistema de inventario universidad.exe"
 
 main.o: main.cpp
 	g++ -c main.cpp -o main.o $(CXXFLAGS)

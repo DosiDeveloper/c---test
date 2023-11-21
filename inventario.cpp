@@ -1,24 +1,27 @@
 /**
  * Este es el archivo que contiene las principales funciones del sistema de inventario
- *
- *
  */
 
 #include <fstream>
 #include <iostream>
-#include <cstdlib>
 #include <iomanip>
+#include <string>
+#include <vector>
 
-using namespace std;
+using std::cin;
+using std::cout;
+using std::endl;
+using std::string;
 
-std::ofstream archivoActivo;
+std::fstream archivoActivo;
 time_t tiempo = time(0);
 auto tlocal = *localtime(&tiempo);
 std::ostringstream tiempo_b;
+string nombre_archivo = "data/data.txt";
 
 struct inventario
 {
-    int NBP;
+    string NBP;
     string MARCA;
     string DEPTO;
     string USUARIO;
@@ -31,14 +34,13 @@ struct inventario
     }
 } camposInv;
 
-
 void registro()
 {
     while (true)
     {
         system("cls");
         if (!archivoActivo.is_open())
-            archivoActivo.open("data/data.txt", std::ios::app);
+            archivoActivo.open(nombre_archivo, std::ios::app);
 
         cout << "Ingrese los siguientes datos: " << endl;
         cout << "- Identificador: ";
@@ -59,18 +61,42 @@ void registro()
         cout << camposInv.toString() << endl;
 
         char select;
-        cout << "¿Desea ingresar otro registro?";
+        cout << "¿Desea ingresar otro registro? (y/n)? ";
         cin >> select;
+        cout << endl;
         if (select == 'y' || select == 'Y')
         {
-            archivoActivo.write(camposInv.toString().c_str(), sizeof camposInv.toString().c_str());
-            archivoActivo.close();
+            archivoActivo << camposInv.toString().c_str() << endl;
         }
         else
         {
+            archivoActivo << camposInv.toString().c_str() << endl;
+            archivoActivo.close();
             break;
         }
     }
+
+    return;
+}
+
+void consulta()
+{
+
+    system("cls");
+    if (!archivoActivo.is_open())
+        archivoActivo.open(nombre_archivo, std::ios::in);
+
+    std::vector<string> lineas;
+    string linea;
+    string select;
+
+    while (archivoActivo >> linea) lineas.push_back(linea);
+    
+    cout << "Ingrese el numero de bien publico que desea buscar: ";
+    cin >> select;
+
+
+    system("pause");
 
     return;
 }

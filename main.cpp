@@ -6,14 +6,143 @@
  *  - Diego Perez C.I:30.346.809
  * Seccion: FL-1410612
  */
+#include <fstream>
 #include <iostream>
-#include "inventario.cpp"
+#include <iomanip>
+#include <string>
+#include <vector>
 
-using std::cout;
+#include <algorithm>
+
 using std::cin;
+using std::cout;
+using std::endl;
+using std::stoi;
+using std::string;
+
+std::fstream archivoActivo;
+time_t tiempo = time(0);
+auto tlocal = *localtime(&tiempo);
+std::ostringstream tiempo_b;
+string nombre_archivo = "data/data.txt";
+
+struct inventario
+{
+    string NBP;
+    string MARCA;
+    string DEPTO;
+    string USUARIO;
+    string FECHAREGISTRO;
+    string FECHAMOD;
+    string FECHADESIN;
+    string toString()
+    {
+        return NBP + " | " + MARCA + " | " + DEPTO + " | " + USUARIO + " | " + FECHAREGISTRO + " | " + FECHAMOD + " | " + FECHADESIN;
+    }
+} camposInv;
+
+
+// esta funcion elimina el espacio en blanco al final de la cadena de texto
+static inline void ltrim(string &s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+        return !std::isspace(ch);
+    }));
+}
+
+void registro()
+{
+    while (true)
+    {
+        system("cls");
+        if (!archivoActivo.is_open())
+            archivoActivo.open(nombre_archivo, std::ios::app);
+
+        cout << "Ingrese los siguientes datos:" << endl;
+        cout << "- Identificador: ";
+        cin >> camposInv.NBP;
+        ltrim(camposInv.NBP);
+        cout << "- Marca: ";
+        cin >> camposInv.MARCA;
+        ltrim(camposInv.MARCA);
+        cout << "- Departamento: ";
+        cin >> camposInv.DEPTO;
+        ltrim(camposInv.DEPTO);
+        cout << "- Usuario: ";
+        getline(cin, camposInv.USUARIO);
+        ltrim(camposInv.USUARIO);
+
+        tiempo_b << std::put_time(&tlocal, "%d/%m/%Y");
+        camposInv.FECHAREGISTRO = tiempo_b.str();
+        camposInv.FECHADESIN = "00/00/0000";
+        camposInv.FECHAMOD = "00/00/0000";
+
+        cout << "Estos son los datos ingresados: " << endl;
+        cout << camposInv.toString() << endl;
+
+        char select;
+        cout << "Desea ingresar otro registro? " << endl;
+        cout << "1. Si" << endl;
+        cout << "2. No" << endl;
+        cin >> select;
+        cout << endl;
+        if (select == '1')
+        {
+            archivoActivo << camposInv.toString().c_str() << endl;
+            continue;
+        }
+        else
+        {
+            archivoActivo << camposInv.toString().c_str() << endl;
+            archivoActivo.close();
+            break;
+        }
+    }
+
+    return;
+}
+
+void consulta()
+{
+    int i = 0;
+
+    system("cls");
+    if (!archivoActivo.is_open())
+        archivoActivo.open(nombre_archivo, std::ios::in);
+
+    std::vector<string> lineas;
+    string linea;
+    string select;
+
+    while (archivoActivo >> linea)
+        lineas.push_back(linea);
+
+    cout << "Ingrese el numero de bien publico que desea buscar: ";
+    cin >> select;
+    for (int i = 0; i < lineas.size(); i++)
+    {
+        cout << lineas[i].substr(lineas[i].find(select.c_str()), lineas[i].length()) << endl;
+    }
+
+    system("pause");
+
+    return;
+}
+
+void modificar()
+{
+    system("cls");
+    return;
+}
+
+void editar()
+{
+    system("cls");
+    return;
+}
 
 int main()
-{   
+{
+    system("mkdir data");
     int select;
     do
     {
@@ -44,14 +173,15 @@ int main()
             consulta();
             break;
         case 3:
+            modificar();
             break;
-        
+
         case 4:
+            editar();
             break;
 
         default:
             system("cls");
-            std::cout << "Hasta la proxima!";
             break;
         }
     } while (select < 4);

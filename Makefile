@@ -28,6 +28,3 @@ run: $(OBJ)
 
 main.o: main.cpp
 	g++ -c main.cpp -o main.o $(CXXFLAGS)
-
-inventario.o: inventario.cpp
-	g++ -c inventario.cpp -o inventario.o $(CXXFLAGS)

@@ -41,6 +41,16 @@ struct inventario
     }
 } camposInv;
 
+//hay que arreglar esto para que se vea menos sacado de internet xd
+std::string getSubstring(const string& str, size_t pos)
+{
+    std::string result;
+    for (size_t i = pos; i < str.length(); ++i)
+    {
+        result += str[i];
+    }
+    return result;
+}
 
 // esta funcion elimina el espacio en blanco al final de la cadena de texto
 static inline void ltrim(string &s) {
@@ -118,9 +128,20 @@ void consulta()
 
     cout << "Ingrese el numero de bien publico que desea buscar: ";
     cin >> select;
+    cout << select << endl;
     for (int i = 0; i < lineas.size(); i++)
     {
-        cout << lineas[i].substr(lineas[i].find(select.c_str()), lineas[i].length()) << endl;
+    size_t pos = lineas[i].find(select.c_str());
+    string substring = getSubstring(lineas[i], pos);
+    std::stringstream ss(substring);
+
+    cout << "- Identificador: " << lineas[i].NBP << endl;
+    cout << "- Marca: " << lineas[i].MARCA << endl; 
+    cout << "- Departamento: " << lineas[i].DEPTO << endl;
+    cout << "- Usuario: " << lineas[i].USUARIO << endl;
+    cout << "- Fecha de Registro: " << lineas[i].FECHAREGISTRO << endl;
+    cout << "- Fecha de Modificación: " << lineas[i].FECHAMOD << endl;
+    cout << "- Fecha de Desincorporación: " << lineas[i].FECHADESIN << endl;
     }
 
     system("pause");
